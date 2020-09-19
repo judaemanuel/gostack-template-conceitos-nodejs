@@ -102,16 +102,16 @@ app.get("/repositories", (request, response) => {
 app.post("/repositories", (request, response) => {
   const { title, url, techs } = request.body;
 
-  if (repositories.filter(repository => repository.url === url).length === 0) {
+  //if (repositories.filter(repository => repository.url === url).length === 0) {
 
-    const repository = { id: uuid(), title, url, techs, likes: 0, dislikes: 0 };
+  const repository = { id: uuid(), title, url, techs, likes: 0/*, dislikes: 0*/ };
 
-    repositories.push(repository);
+  repositories.push(repository);
 
-    return response.status(201).json(repository);
-  } else {
-    return response.status(400).json({ code: "002", reason: "This url is already included before." });
-  }
+  return response.status(201).json(repository);
+  // } else {
+  //   return response.status(400).json({ code: "002", reason: "This url is already included before." });
+  // }
 
 });
 
@@ -133,16 +133,16 @@ app.put("/repositories/:id", (request, response) => {
   const ix = repositories.findIndex(r => r.id === id);
 
   if (ix >= 0) {
-    if (repositories.filter(r => r.url === url && r.id !== id).length === 0) {
+    //if (repositories.filter(r => r.url === url && r.id !== id).length === 0) {
 
-      const repository = { id, title, url, techs, likes: repositories[ix].likes, dislikes: repositories[ix].dislikes };
+    const repository = { id, title, url, techs, likes: repositories[ix].likes/*, dislikes: repositories[ix].dislikes*/ };
 
-      repositories[ix] = repository;
+    repositories[ix] = repository;
 
-      return response.status(204).send();
-    } else {
-      return response.status(400).json({ code: "002", reason: "This url is already included before." });
-    }
+    return response.json(repository);
+    // } else {
+    //   return response.status(400).json({ code: "002", reason: "This url is already included before." });
+    // }
   } else {
     return response.status(400).json({ code: "001", reason: 'Repository not found.' });
   }
@@ -180,7 +180,7 @@ app.post("/repositories/:id/like", (request, response) => {
   if (ix >= 0) {
     repositories[ix].likes++;
 
-    return response.status(204).send();
+    return response.json({ likes: repositories[ix].likes });
   } else {
     return response.status(400).json({ code: "001", reason: 'Repository not found.' });
   }
